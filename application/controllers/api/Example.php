@@ -19,13 +19,17 @@ require APPPATH . 'libraries/Format.php';
  * @license         MIT
  * @link            https://github.com/chriskacerguis/codeigniter-restserver
  */
-class Example extends REST_Controller {
+class Example extends CI_Controller {
+
+    use REST_Controller {
+        REST_Controller::__construct as private __resTraitConstruct;
+    }
 
     function __construct()
     {
         // Construct the parent class
         parent::__construct();
-
+        $this->__resTraitConstruct();
         // Configure limits on our controller methods
         // Ensure you have created the 'limits' table and enabled 'limits' within application/config/rest.php
         $this->methods['users_get']['limit'] = 500; // 500 requests per hour per user/key
@@ -52,7 +56,7 @@ class Example extends REST_Controller {
             if ($users)
             {
                 // Set the response and exit
-                $this->response($users, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+                $this->response($users, 200); // OK (200) being the HTTP response code
             }
             else
             {
@@ -60,7 +64,7 @@ class Example extends REST_Controller {
                 $this->response([
                     'status' => false,
                     'message' => 'No users were found'
-                ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+                ], 404); // NOT_FOUND (404) being the HTTP response code
             }
         }
 
@@ -72,7 +76,7 @@ class Example extends REST_Controller {
         if ($id <= 0)
         {
             // Invalid id, set the response and exit.
-            $this->response(null, REST_Controller::HTTP_BAD_REQUEST); // BAD_REQUEST (400) being the HTTP response code
+            $this->response(null, 400); // BAD_REQUEST (400) being the HTTP response code
         }
 
         // Get the user from the array, using the id as key for retrieval.
@@ -93,14 +97,14 @@ class Example extends REST_Controller {
 
         if (!empty($user))
         {
-            $this->set_response($user, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+            $this->set_response($user, 200); // OK (200) being the HTTP response code
         }
         else
         {
             $this->set_response([
                 'status' => false,
                 'message' => 'User could not be found'
-            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+            ], 404); // NOT_FOUND (404) being the HTTP response code
         }
     }
 
@@ -114,7 +118,7 @@ class Example extends REST_Controller {
             'message' => 'Added a resource'
         ];
 
-        $this->set_response($message, REST_Controller::HTTP_CREATED); // CREATED (201) being the HTTP response code
+        $this->set_response($message, 201); // CREATED (201) being the HTTP response code
     }
 
     public function users_delete()
@@ -125,7 +129,7 @@ class Example extends REST_Controller {
         if ($id <= 0)
         {
             // Set the response and exit
-            $this->response(null, REST_Controller::HTTP_BAD_REQUEST); // BAD_REQUEST (400) being the HTTP response code
+            $this->response(null, 400); // BAD_REQUEST (400) being the HTTP response code
         }
 
         // $this->some_model->delete_something($id);
@@ -134,7 +138,7 @@ class Example extends REST_Controller {
             'message' => 'Deleted the resource'
         ];
 
-        $this->set_response($message, REST_Controller::HTTP_NO_CONTENT); // NO_CONTENT (204) being the HTTP response code
+        $this->set_response($message, 204); // NO_CONTENT (204) being the HTTP response code
     }
 
 }
