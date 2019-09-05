@@ -18,9 +18,17 @@ class Auth extends CI_Controller {
         $this->load->model('myModel');   
     }
 
-    public function index_get()
+    public function index_post()
     {
+        $headers = $this->myModel->CheckAuthClient();
+        if ($headers === TRUE) {
+            $username = $this->get('username');
+            $password = $this->get('password');
+        }
         
+        $Q_d_a = $this->myModel->Auth($username,$password);
+
+        $this->response($Q_d_a);
     }
 }
 ?>

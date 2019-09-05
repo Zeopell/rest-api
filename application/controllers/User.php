@@ -21,9 +21,11 @@ class User extends CI_Controller {
     public function index_get()
     {
         $UserID = $this->uri->segment(2);
-        $q_d_u = $this->myModel->getDataKaryawan($UserID);
+        $page = $this->get('p');
 
-        $this->response($q_d_u, 200);
+        $Q_d_u = $this->myModel->getDataKaryawan($UserID,$page);
+
+        $this->response($Q_d_u);
     }
 }
 ?>
